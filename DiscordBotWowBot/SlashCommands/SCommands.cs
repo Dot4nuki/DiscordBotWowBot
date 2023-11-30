@@ -382,21 +382,63 @@ namespace DiscordBotWowBot.SlashCommands
             }
             await ctx.CreateResponseAsync("You are now subscribed to the oreha information! You will recieve automatically updated information into your DMs", true); //sending responce to channel (to prevent bot from waiting)
         }
-        [SlashCommand("OrehaUnSubscribe", "Unsubscribe to the oreha information")]
-        public async Task UnSub(InteractionContext ctx)
+        [SlashCommand("Help", "Help command")]
+        public async Task Help(InteractionContext ctx, [Choice("Crit", "crit")][Choice("KBW", "kbw")][Choice("Bracelet", "bracelet")][Choice("PartySynergy", "partysynergy")][Choice("Excavating", "excavating")][Choice("Fishing", "fishing")][Choice("Hunting", "hunting")][Choice("OrehaSubscribe", "orehasubscribe")][Choice("Help", "help")][Option("Command","command")] string command)
         {
-            dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("users.json"));
-            foreach (dynamic name in jsonFile)
+            string text = "";
+            string title = command;
+            if (command == "crit")
             {
-                var userInfo = name.First;
-                if (userInfo["id"] == ctx.Member.Id)
-                {
-                    userInfo.Remove("dot4nuki");
-                }
+                text = "Calculates your % crit chance depending on crit stat";
+                title += " [critstat]";
             }
-            string output = JsonConvert.SerializeObject(jsonFile, Formatting.Indented);
-            File.WriteAllText("users.json", output);
-            await ctx.CreateResponseAsync("You are now unsubscribed to the oreha information!", true);
+            else if (command == "kbw")
+            {
+                text = "Shows keen blunt weapon efficiency depending on crit chance and crit dmg (not including keenbluntweapon engraving, so base crit dmg is 200), the inputed values are rounded to the nearest 5";
+                title += " [critchance] [critdmg]";
+            }
+            else if (command == "bracelet")
+            {
+                text = "Rolls a random bracelet with 5 lines, the circle's colors represent the rarity of the roll (for example, orange circle Fervor means legendary Fervor)";
+            }
+            else if (command == "partysynergy")
+            {
+                text = "Shows all the classes party synergies and party buffs";
+                title += " [classname]";
+            }
+            else if (command == "excavating")
+            {
+                text = "Inserts the values from the ingame market to the database, and then updates everyone (that is subscribed) with the new data (the values are edited in the DMs, to prevent message spam)";
+                title += " [white] [green] [blue] [basic] [superior] [prime]";
+            }
+            else if (command == "fishing")
+            {
+                text = "Inserts the values from the ingame market to the database, and then updates everyone (that is subscribed) with the new data (the values are edited in the DMs, to prevent message spam)";
+                title += " [white] [green] [blue] [basic] [superior] [prime]";
+            }
+            else if (command == "hunting")
+            {
+                text = "Inserts the values from the ingame market to the database, and then updates everyone (that is subscribed) with the new data (the values are edited in the DMs, to prevent message spam)";
+                title += " [white] [green] [blue] [basic] [superior] [prime]";
+            }
+            else if (command == "orehasubscribe")
+            {
+                text = "Subscribe to the oreha information, the information will be sent to the DMs and will be updated automatically, any updates will be edited in the DMs with the bot to prevent spam. the decrease value is the discount depending on stronghold structures, this value is calculated ingame and can be found when crafting orehas in % green text. The timestamp is based on user's current time";
+                title += " [decrease]";
+            }
+            else if (command == "help")
+            {
+                text = "Shows a more detailed description to the command and how to use.";
+            }
+            var message = new DiscordMessageBuilder()
+                    .AddEmbed(new DiscordEmbedBuilder()
+                    .WithTitle("**/" + command + "**")
+                    .WithColor(0x555555)
+                    .WithThumbnail(@"https://preview.redd.it/7u51c9kq36i81.png?width=1176&format=png&auto=webp&s=b6fb959847b09369b793f3cf2a4d54a2981ed4be")
+                    .WithDescription(text)
+                    );
+            await ctx.Channel.SendMessageAsync(message);
+            await ctx.CreateResponseAsync(command);
         }
     }
 }
