@@ -191,9 +191,7 @@ namespace DiscordBotWowBot.SlashCommands
         public async Task Excavating(InteractionContext ctx, [Option("White", "White Price")] double white, [Option("Green", "Green Price")] double green, [Option("Blue", "Blue Price")] double blue, [Option("Basic", "Basic Fusion Price")] double basic, [Option("Superior", "Superio Fusion Price")] double superior, [Option("Prime", "Prime Fusion Price")] double prime)
         {
             DateTime timeUtc = DateTime.UtcNow;
-            TimeZoneInfo cetZone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
-            DateTime cetTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, cetZone);
-            string time = cetTime.ToString();
+            string time = timeUtc.ToString();
             int option = 1;
             dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("excavationOreha.json")); //save the values into json file
             jsonFile["white"] = white;
@@ -218,25 +216,7 @@ namespace DiscordBotWowBot.SlashCommands
                 double decrease = userInfo["decrease"];
                 string[] oreha = OrehaMath.GetValues(decrease, option);
                 DateTime newtime = DateTime.Parse(oreha[12]);
-                var message = new DiscordMessageBuilder()
-                    .AddEmbed(new DiscordEmbedBuilder()
-                    .WithTitle("Basic              Superior       Prime")
-                    .WithColor(0xA2570B)
-                    .WithThumbnail(@"https://lostark.wiki.fextralife.com/file/Lost-Ark/excavating_icon_2_trade_skills_lost_ark_wiki_guide.png")
-                    .AddField("CraftingCost", oreha[0], true)
-                    .AddField("CraftingCost", oreha[1], true)
-                    .AddField("CraftingCost", oreha[2], true)
-                    .AddField("Profitx1", oreha[3], true)
-                    .AddField("Profitx1", oreha[4], true)
-                    .AddField("Profitx1", oreha[5], true)
-                    .AddField("Profitx30", oreha[6], true)
-                    .AddField("Profitx30", oreha[7], true)
-                    .AddField("Profitx30", oreha[8], true)
-                    .AddField("CraftvsSell", oreha[9], true)
-                    .AddField("CraftvsSell", oreha[10], true)
-                    .AddField("CraftvsSell", oreha[11], true)
-                    .WithTimestamp(newtime)
-                    );
+                var message = MessageBuilder.GetMessage(oreha, option);
                 var user = await ctx.Guild.GetMemberAsync(uId);
                 var DMChannel = await user.CreateDmChannelAsync();
                 var Message = await DMChannel.GetMessageAsync((ulong)msgId, true);
@@ -250,11 +230,9 @@ namespace DiscordBotWowBot.SlashCommands
         public async Task Fishing(InteractionContext ctx, [Option("White", "White Price")] double white, [Option("Green", "Green Price")] double green, [Option("Blue", "Blue Price")] double blue, [Option("Basic", "Basic Fusion Price")] double basic, [Option("Superior", "Superio Fusion Price")] double superior, [Option("Prime", "Prime Fusion Price")] double prime)
         {
             DateTime timeUtc = DateTime.UtcNow;
-            TimeZoneInfo cetZone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
-            DateTime cetTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, cetZone);
-            string time = cetTime.ToString();
-            int option = 1;
-            dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("excavationOreha.json")); //save the values into json file
+            string time = timeUtc.ToString();
+            int option = 2;
+            dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("fishingOreha.json")); //save the values into json file
             jsonFile["white"] = white;
             jsonFile["green"] = green;
             jsonFile["blue"] = blue;
@@ -263,7 +241,7 @@ namespace DiscordBotWowBot.SlashCommands
             jsonFile["prime"] = prime;
             jsonFile["time"] = time;
             string output = JsonConvert.SerializeObject(jsonFile, Formatting.Indented);
-            File.WriteAllText("excavationOreha.json", output);
+            File.WriteAllText("fishingOreha.json", output);
 
             //new code (except the awaited response async):
 
@@ -277,25 +255,7 @@ namespace DiscordBotWowBot.SlashCommands
                 double decrease = userInfo["decrease"];
                 string[] oreha = OrehaMath.GetValues(decrease, option);
                 DateTime newtime = DateTime.Parse(oreha[12]);
-                var message = new DiscordMessageBuilder()
-                    .AddEmbed(new DiscordEmbedBuilder()
-                    .WithTitle("Basic              Superior       Prime")
-                    .WithColor(0x2592db)
-                    .WithThumbnail(@"https://lostark.wiki.fextralife.com/file/Lost-Ark/fishing_icon_2_trade_skills_lost_ark_wiki_guide.png")
-                    .AddField("CraftingCost", oreha[0], true)
-                    .AddField("CraftingCost", oreha[1], true)
-                    .AddField("CraftingCost", oreha[2], true)
-                    .AddField("Profitx1", oreha[3], true)
-                    .AddField("Profitx1", oreha[4], true)
-                    .AddField("Profitx1", oreha[5], true)
-                    .AddField("Profitx30", oreha[6], true)
-                    .AddField("Profitx30", oreha[7], true)
-                    .AddField("Profitx30", oreha[8], true)
-                    .AddField("CraftvsSell", oreha[9], true)
-                    .AddField("CraftvsSell", oreha[10], true)
-                    .AddField("CraftvsSell", oreha[11], true)
-                    .WithTimestamp(newtime)
-                    );
+                var message = MessageBuilder.GetMessage(oreha, option);
                 var user = await ctx.Guild.GetMemberAsync(uId);
                 var DMChannel = await user.CreateDmChannelAsync();
                 var Message = await DMChannel.GetMessageAsync((ulong)msgId, true);
@@ -308,11 +268,9 @@ namespace DiscordBotWowBot.SlashCommands
         public async Task Hunting(InteractionContext ctx, [Option("White", "White Price")] double white, [Option("Green", "Green Price")] double green, [Option("Blue", "Blue Price")] double blue, [Option("Basic", "Basic Fusion Price")] double basic, [Option("Superior", "Superio Fusion Price")] double superior, [Option("Prime", "Prime Fusion Price")] double prime)
         {
             DateTime timeUtc = DateTime.UtcNow;
-            TimeZoneInfo cetZone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
-            DateTime cetTime = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, cetZone);
-            string time = cetTime.ToString();
-            int option = 1;
-            dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("excavationOreha.json")); //save the values into json file
+            string time = timeUtc.ToString();
+            int option = 3;
+            dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("huntingOreha.json")); //save the values into json file
             jsonFile["white"] = white;
             jsonFile["green"] = green;
             jsonFile["blue"] = blue;
@@ -321,7 +279,7 @@ namespace DiscordBotWowBot.SlashCommands
             jsonFile["prime"] = prime;
             jsonFile["time"] = time;
             string output = JsonConvert.SerializeObject(jsonFile, Formatting.Indented);
-            File.WriteAllText("excavationOreha.json", output);
+            File.WriteAllText("huntingOreha.json", output);
 
             //new code (except the awaited response async):
 
@@ -335,25 +293,7 @@ namespace DiscordBotWowBot.SlashCommands
                 double decrease = userInfo["decrease"];
                 string[] oreha = OrehaMath.GetValues(decrease, option);
                 DateTime newtime = DateTime.Parse(oreha[12]);
-                var message = new DiscordMessageBuilder()
-                    .AddEmbed(new DiscordEmbedBuilder()
-                    .WithTitle("Basic              Superior       Prime")
-                    .WithColor(0xD10000)
-                    .WithThumbnail(@"https://lostark.wiki.fextralife.com/file/Lost-Ark/hunting_icon_2_trade_skills_lost_ark_wiki_guide.png")
-                    .AddField("CraftingCost", oreha[0], true)
-                    .AddField("CraftingCost", oreha[1], true)
-                    .AddField("CraftingCost", oreha[2], true)
-                    .AddField("Profitx1", oreha[3], true)
-                    .AddField("Profitx1", oreha[4], true)
-                    .AddField("Profitx1", oreha[5], true)
-                    .AddField("Profitx30", oreha[6], true)
-                    .AddField("Profitx30", oreha[7], true)
-                    .AddField("Profitx30", oreha[8], true)
-                    .AddField("CraftvsSell", oreha[9], true)
-                    .AddField("CraftvsSell", oreha[10], true)
-                    .AddField("CraftvsSell", oreha[11], true)
-                    .WithTimestamp(newtime)
-                    );
+                var message = MessageBuilder.GetMessage(oreha, option);
                 var user = await ctx.Guild.GetMemberAsync(uId);
                 var DMChannel = await user.CreateDmChannelAsync();
                 var Message = await DMChannel.GetMessageAsync((ulong)msgId, true);
@@ -381,28 +321,6 @@ namespace DiscordBotWowBot.SlashCommands
             await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
                     .WithContent(className + " synergies are:\n" + synergies));
         }
-        /*[SlashCommand("CreateRaid", "Create a new raid")]
-        public async Task CreateRaid(InteractionContext ctx, [Option("RaidName", "raidName")] string raidName, [Choice("Valtan", "valtan")][Choice("Vykas", "vykas")][Choice("Kakul", "kakul")][Choice("Brelshalza", "brel")][Choice("Akkan", "akkan")][Option("Raid", "raid")] string raid, [Option("Date", "date")] string date, [Option("Time", "time")] string time)
-        {
-            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-                    .WithContent("not implemented, :("));
-            try
-            {
-                Char delimiterDate = '-';
-                Char delimiterTime = ':';
-                String[] arrayDate = date.Split(delimiterDate);
-                String[] arrayTime = time.Split(delimiterTime);
-                DateTimeOffset schedule = new DateTime(int.Parse(arrayDate[2]), int.Parse(arrayDate[1]), int.Parse(arrayDate[0]), int.Parse(arrayTime[0]), int.Parse(arrayTime[1]), 0);
-                long newtime = schedule.ToUnixTimeSeconds();
-                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-                .WithContent(raidName + " " + raid + " " + "<t:" + newtime.ToString() + ":F>"));
-            }
-            catch
-            {
-                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-                  .WithContent("Date invalid"));
-            }
-        }*/
         [SlashCommand("OrehaSubscribe", "Subscribe to view and get updated oreha information automatically")]
         public async Task Sub(InteractionContext ctx, [Option("Decrease", "Stronghold decrease")] double decrease)
         {
@@ -418,68 +336,14 @@ namespace DiscordBotWowBot.SlashCommands
             dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("users.json"));
             oreha = OrehaMath.GetValues(decrease, 1);
             newtime = DateTime.Parse(oreha[12]);
-            messageExc = new DiscordMessageBuilder()
-                .AddEmbed(new DiscordEmbedBuilder()
-                .WithTitle("Basic              Superior       Prime")
-                .WithColor(0xA2570B)
-                .WithThumbnail(@"https://lostark.wiki.fextralife.com/file/Lost-Ark/excavating_icon_2_trade_skills_lost_ark_wiki_guide.png")
-                .AddField("CraftingCost", oreha[0], true)
-                .AddField("CraftingCost", oreha[1], true)
-                .AddField("CraftingCost", oreha[2], true)
-                .AddField("Profitx1", oreha[3], true)
-                .AddField("Profitx1", oreha[4], true)
-                .AddField("Profitx1", oreha[5], true)
-                .AddField("Profitx30", oreha[6], true)
-                .AddField("Profitx30", oreha[7], true)
-                .AddField("Profitx30", oreha[8], true)
-                .AddField("CraftvsSell", oreha[9], true)
-                .AddField("CraftvsSell", oreha[10], true)
-                .AddField("CraftvsSell", oreha[11], true)
-                .WithTimestamp(newtime)
-                );
+            messageExc = MessageBuilder.GetMessage(oreha, 1);
 
-            oreha = OrehaMath.GetValues(decrease, 2);
-            newtime = DateTime.Parse(oreha[12]);
-            messageHunt = new DiscordMessageBuilder()
-                .AddEmbed(new DiscordEmbedBuilder()
-                .WithTitle("Basic              Superior       Prime")
-                .WithColor(0xD10000)
-                .WithThumbnail(@"https://lostark.wiki.fextralife.com/file/Lost-Ark/hunting_icon_2_trade_skills_lost_ark_wiki_guide.png")
-                .AddField("CraftingCost", oreha[0], true)
-                .AddField("CraftingCost", oreha[1], true)
-                .AddField("CraftingCost", oreha[2], true)
-                .AddField("Profitx1", oreha[3], true)
-                .AddField("Profitx1", oreha[4], true)
-                .AddField("Profitx1", oreha[5], true)
-                .AddField("Profitx30", oreha[6], true)
-                .AddField("Profitx30", oreha[7], true)
-                .AddField("Profitx30", oreha[8], true)
-                .AddField("CraftvsSell", oreha[9], true)
-                .AddField("CraftvsSell", oreha[10], true)
-                .AddField("CraftvsSell", oreha[11], true)
-                .WithTimestamp(newtime)
-                );
             oreha = OrehaMath.GetValues(decrease, 3);
             newtime = DateTime.Parse(oreha[12]);
-            messageFish = new DiscordMessageBuilder()
-                .AddEmbed(new DiscordEmbedBuilder()
-                .WithTitle("Basic              Superior       Prime")
-                .WithColor(0x2592db)
-                .WithThumbnail(@"https://lostark.wiki.fextralife.com/file/Lost-Ark/fishing_icon_2_trade_skills_lost_ark_wiki_guide.png")
-                .AddField("CraftingCost", oreha[0], true)
-                .AddField("CraftingCost", oreha[1], true)
-                .AddField("CraftingCost", oreha[2], true)
-                .AddField("Profitx1", oreha[3], true)
-                .AddField("Profitx1", oreha[4], true)
-                .AddField("Profitx1", oreha[5], true)
-                .AddField("Profitx30", oreha[6], true)
-                .AddField("Profitx30", oreha[7], true)
-                .AddField("Profitx30", oreha[8], true)
-                .AddField("CraftvsSell", oreha[9], true)
-                .AddField("CraftvsSell", oreha[10], true)
-                .AddField("CraftvsSell", oreha[11], true)
-                .WithTimestamp(newtime)
-                );
+            messageHunt = MessageBuilder.GetMessage(oreha, 3);
+            oreha = OrehaMath.GetValues(decrease, 2);
+            newtime = DateTime.Parse(oreha[12]);
+            messageFish = MessageBuilder.GetMessage(oreha, 2);
             foreach (dynamic name in jsonFile)
             {
                 var userInfo = name.First;

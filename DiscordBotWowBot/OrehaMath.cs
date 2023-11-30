@@ -11,7 +11,7 @@ namespace DiscordBotWowBot
     {
         public static string[] GetValues(double decrease,int option)
         {
-            dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("excavationOreha.json"));
+            dynamic jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("excavationOreha.json")); //can be removed?
             if(option == 1)
                 jsonFile = JsonConvert.DeserializeObject(File.ReadAllText("excavationOreha.json"));
             else if(option == 2)
